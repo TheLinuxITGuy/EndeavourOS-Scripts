@@ -12,7 +12,7 @@ class ScriptRunner(QWidget):
         self.setWindowTitle('The Linux IT Guy - EndeavourOS Scripts')
 
         # Set fixed size for the window
-        self.setFixedSize(400, 300)  # Adjust the width and height as needed
+        self.setFixedSize(400, 400)  # Adjust the width and height as needed
 
         # Layouts
         main_layout = QVBoxLayout()
@@ -28,9 +28,11 @@ class ScriptRunner(QWidget):
         self.install_scripts = {
             "Brave Browser": "./install-brave.sh",
             "Google Chrome": "./install-chrome.sh",
+            "Lutris": "./install-lutris.sh",
             "Microsoft Edge": "./install-edge.sh",
             "Firefox": "./install-firefox.sh",
             "Neofetch": "./install-neofetch.sh"
+
         }
         self.remove_scripts = {
             "Brave Browser": "./remove-brave.sh",
@@ -40,21 +42,20 @@ class ScriptRunner(QWidget):
             "Neofetch": "./remove-neofetch.sh"
         }
 
-        self.install_checkboxes = {}
-        self.remove_checkboxes = {}
+        self.checkboxes = []
 
         # Add checkboxes for install scripts
         for script_name in self.install_scripts:
             checkbox = QCheckBox(script_name)
             checkbox.stateChanged.connect(self.on_checkbox_state_changed)
-            self.install_checkboxes[script_name] = checkbox
+            self.checkboxes.append(checkbox)
             install_layout.addWidget(checkbox)
 
         # Add checkboxes for remove scripts
         for script_name in self.remove_scripts:
             checkbox = QCheckBox(script_name)
             checkbox.stateChanged.connect(self.on_checkbox_state_changed)
-            self.remove_checkboxes[script_name] = checkbox
+            self.checkboxes.append(checkbox)
             remove_layout.addWidget(checkbox)
 
         install_group.setLayout(install_layout)
@@ -79,30 +80,21 @@ class ScriptRunner(QWidget):
 
     def on_checkbox_state_changed(self, state):
         checkbox = self.sender()
-        script_name = checkbox.text()
         if state == 2:  # Checked state
-            print(f"{script_name} checked.")
-            if script_name in self.install_checkboxes:
-                self.remove_checkboxes[script_name].setEnabled(False)
-            elif script_name in self.remove_checkboxes:
-                self.install_checkboxes[script_name].setEnabled(False)
+            print(f"{checkbox.text()} checked.")
         elif state == 0:  # Unchecked state
-            print(f"{script_name} unchecked.")
-            if script_name in self.install_checkboxes:
-                self.remove_checkboxes[script_name].setEnabled(True)
-            elif script_name in self.remove_checkboxes:
-                self.install_checkboxes[script_name].setEnabled(True)
+            print(f"{checkbox.text()} unchecked.")
 
     def run_scripts(self):
-        for script_name, checkbox in {**self.install_checkboxes, **self.remove_checkboxes}.items():
+        for checkbox in self.checkboxes:
             if checkbox.isChecked():
-                script_path = self.install_scripts.get(script_name) or self.remove_scripts.get(script_name)
+                script_path = self.install_scripts.get(checkbox.text()) or self.remove_scripts.get(checkbox.text())
                 if script_path:
                     try:
                         subprocess.run(['bash', script_path], check=True)
-                        QMessageBox.information(self, "Success", f"{script_name} executed successfully.")
+                        QMessageBox.information(self, "Success", f"{checkbox.text()} executed successfully.")
                     except subprocess.CalledProcessError as e:
-                        QMessageBox.critical(self, "Error", f"Failed to execute {script_name}.\n{e}")
+                        QMessageBox.critical(self, "Error", f"Failed to execute {checkbox.text()}.\n{e}")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
