@@ -1,103 +1,120 @@
-import sys
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+import gi
 import subprocess
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QCheckBox, QMessageBox, QGroupBox
 
-class ScriptRunner(QWidget):
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+
+class ourwindow(Gtk.Window):
     def __init__(self):
-        super().__init__()
+        Gtk.Window.__init__(self, title="The Linux IT Guy - Linux Mint Scripts")
+        Gtk.Window.set_default_size(self, 400, 325)
+        Gtk.Window.set_position(self, Gtk.WindowPosition.CENTER)
+        # Prevent the window from being resized
+        Gtk.Window.set_resizable(self, False)
 
-        self.initUI()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.add(vbox)
 
-    def initUI(self):
-        self.setWindowTitle('The Linux IT Guy - EndeavourOS Scripts')
+        # Install category
+        frame_install = Gtk.Frame(label="Install")
+        vbox.pack_start(frame_install, True, True, 0)
 
-        # Set fixed size for the window
-        self.setFixedSize(400, 400)  # Adjust the width and height as needed
+        box_install = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        frame_install.add(box_install)
 
-        # Layouts
-        main_layout = QVBoxLayout()
+        self.install_checkboxes = []
+        install_options = [("Enable Bluetooth", "./enable-bluetooth.sh"),
+                           ("Brave Browser", "./install-brave.sh"),
+                           ("Discord", "./install-discord.sh"),
+                           ("Firefox", "./install-firefox.sh"),
+                           ("GIMP", "./install-gimp.sh"),
+                           ("Google Chrome", "./install-chrome.sh"),
+                           ("Lutris", "./install-lutris.sh"),
+                           ("Microsoft Visual Studio Code", "./install-code.sh"),
+                           ("Microsoft Edge", "./install-edge.sh"),
+                           ("Neofetch", "./install-neofetch.sh"),
+                           ("Steam & ProtonUp-Qt", "./install-steamproton.sh")]
 
-        # Group boxes for Install and Remove scripts
-        install_group = QGroupBox("Install")
-        remove_group = QGroupBox("Remove")
+        for option, script in install_options:
+            check_button = Gtk.CheckButton(label=option)
+            box_install.pack_start(check_button, True, True, 0)
+            check_button.connect("toggled", self.on_check_button_toggled)
+            self.install_checkboxes.append((check_button, script))
 
-        install_layout = QVBoxLayout()
-        remove_layout = QVBoxLayout()
+        # Add a separator with a height of 10 pixels
+        spacer = Gtk.Box()
+        spacer.set_size_request(0, 10)  # Set the height of the spacer to 10 pixels
+        vbox.pack_start(spacer, False, False, 0)
 
-        # Scripts categorized into Install and Remove
-        self.install_scripts = {
-            "Brave Browser": "./install-brave.sh",
-            "Google Chrome": "./install-chrome.sh",
-            "Lutris": "./install-lutris.sh",
-            "Microsoft Edge": "./install-edge.sh",
-            "Firefox": "./install-firefox.sh",
-            "Neofetch": "./install-neofetch.sh"
+        # Remove category
+        frame_remove = Gtk.Frame(label="Remove")
+        vbox.pack_start(frame_remove, True, True, 0)
 
-        }
-        self.remove_scripts = {
-            "Brave Browser": "./remove-brave.sh",
-            "Google Chrome": "./remove-chrome.sh",
-            "Microsoft Edge": "./remove-edge.sh",
-            "Firefox": "./remove-firefox.sh",
-            "Neofetch": "./remove-neofetch.sh"
-        }
+        box_remove = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        frame_remove.add(box_remove)
 
-        self.checkboxes = []
+        self.remove_checkboxes = []
+        remove_options = [("Disable Bluetooth", "./disable-bluetooth.sh"),
+                          ("Brave Browser", "./remove-brave.sh"),
+                          ("Discord", "./remove-discord.sh"),
+                          ("Firefox", "./remove-firefox.sh"),
+                          ("GIMP", "./remove-gimp.sh"),
+                          ("Google Chrome", "./remove-chrome.sh"),
+                          ("Lutris", "./remove-lutris.sh"),
+                          ("Microsoft Visual Studio Code", "./remove-code.sh"),
+                          ("Microsoft Edge", "./remove-edge.sh"),
+                          ("Neofetch", "./remove-neofetch.sh"),
+                          ("Steam & ProtonUp-Qt", "./remove-steamproton.sh")]
 
-        # Add checkboxes for install scripts
-        for script_name in self.install_scripts:
-            checkbox = QCheckBox(script_name)
-            checkbox.stateChanged.connect(self.on_checkbox_state_changed)
-            self.checkboxes.append(checkbox)
-            install_layout.addWidget(checkbox)
-
-        # Add checkboxes for remove scripts
-        for script_name in self.remove_scripts:
-            checkbox = QCheckBox(script_name)
-            checkbox.stateChanged.connect(self.on_checkbox_state_changed)
-            self.checkboxes.append(checkbox)
-            remove_layout.addWidget(checkbox)
-
-        install_group.setLayout(install_layout)
-        remove_group.setLayout(remove_layout)
-
-        main_layout.addWidget(install_group)
-        main_layout.addWidget(remove_group)
+        for option, script in remove_options:
+            check_button = Gtk.CheckButton(label=option)
+            box_remove.pack_start(check_button, True, True, 0)
+            check_button.connect("toggled", self.on_check_button_toggled)
+            self.remove_checkboxes.append((check_button, script))
 
         # Run and Quit buttons
-        button_layout = QHBoxLayout()
-        run_button = QPushButton('Run', self)
-        quit_button = QPushButton('Quit', self)
+        hbox = Gtk.Box(spacing=6)
+        vbox.pack_start(hbox, True, True, 0)
 
-        run_button.clicked.connect(self.run_scripts)
-        quit_button.clicked.connect(self.close)
+        run_button = Gtk.Button(label="Run")
+        run_button.connect("clicked", self.on_run_button_clicked)
+        hbox.pack_start(run_button, True, True, 0)
 
-        button_layout.addWidget(run_button)
-        button_layout.addWidget(quit_button)
+        quit_button = Gtk.Button(label="Quit")
+        quit_button.connect("clicked", Gtk.main_quit)
+        hbox.pack_start(quit_button, True, True, 0)
 
-        main_layout.addLayout(button_layout)
-        self.setLayout(main_layout)
+    def on_check_button_toggled(self, button):
+        if button.get_active():
+            print("{} checked".format(button.get_label()))
+        else:
+            print("{} unchecked".format(button.get_label()))
 
-    def on_checkbox_state_changed(self, state):
-        checkbox = self.sender()
-        if state == 2:  # Checked state
-            print(f"{checkbox.text()} checked.")
-        elif state == 0:  # Unchecked state
-            print(f"{checkbox.text()} unchecked.")
+    def on_run_button_clicked(self, button):
+        print("Run button clicked")
+        for check_button, script in self.install_checkboxes + self.remove_checkboxes:
+            if check_button.get_active():
+                print("Running script: {}".format(script))
+                subprocess.run(["bash", script])
 
-    def run_scripts(self):
-        for checkbox in self.checkboxes:
-            if checkbox.isChecked():
-                script_path = self.install_scripts.get(checkbox.text()) or self.remove_scripts.get(checkbox.text())
-                if script_path:
-                    try:
-                        subprocess.run(['bash', script_path], check=True)
-                        QMessageBox.information(self, "Success", f"{checkbox.text()} executed successfully.")
-                    except subprocess.CalledProcessError as e:
-                        QMessageBox.critical(self, "Error", f"Failed to execute {checkbox.text()}.\n{e}")
+        # Create a message dialog
+        dialog = Gtk.MessageDialog(
+            transient_for=self,
+            flags=0,
+            message_type=Gtk.MessageType.INFO,
+            buttons=Gtk.ButtonsType.OK,
+            text="Applications have been Installed and/or Removed.",
+        )
+        dialog.format_secondary_text(
+            "Please click the 'Quit' button to exit the application."
+        )
+        dialog.run()
+        dialog.destroy()
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = ScriptRunner()
-    ex.show()
-    sys.exit(app.exec_())
+window = ourwindow()
+window.connect("delete-event", Gtk.main_quit)
+window.show_all()
+Gtk.main()
