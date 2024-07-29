@@ -6,8 +6,8 @@ Add and Remove software from EndeavourOS with the click of a button
 - Open a Terminal
 -   Type: sudo pacman -S python-gobject
 -   Type: cd ~/Downloads
--   Type: tar -xzf FILE-NAME.tar.gz
--   Type: cd FOLDER-NAME
+-   Type: tar -xzf EndeavourOS-Scripts-1.x.tar.gz
+-   Type: cd EndeavourOS-Scripts-1.x
 -   Type: chmod u+x ./\*.\*
 -   Type: python Main.py
 - Select the Applications you would like to Install/Remove
