@@ -1,3 +1,4 @@
 # EndeavourOS-Scripts
 
-Work in progress, please do not download and use.
+Requirements:
+-sudo pacman -S python-gobject
