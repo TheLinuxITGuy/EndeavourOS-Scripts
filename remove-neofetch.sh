@@ -2,6 +2,11 @@
 
 APP_NAME="neofetch"
 
+echo -e "\033[0;32m====================================="
+echo -e "\033[1;32mThe Linux IT Guy - EndeavourOS Scripts"
+echo -e "\033[1;32mRemoving $APP_NAME"
+echo -e "\033[0;32m=====================================\033[0m"
+
 # Check if the app is already installed
 if command -v $APP_NAME &> /dev/null
 then

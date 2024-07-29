@@ -2,6 +2,11 @@
 
 APP_NAME="microsoft-edge-stable-bin"
 
+echo -e "\033[0;32m====================================="
+echo -e "\033[1;32mThe Linux IT Guy - EndeavourOS Scripts"
+echo -e "\033[1;32mRemoving $APP_NAME"
+echo -e "\033[0;32m=====================================\033[0m"
+
 #Check if yay is installed
 if ! command -v yay &>/dev/null
 then
