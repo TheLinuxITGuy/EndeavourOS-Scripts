@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_NAME="firefox"
+APP_NAME="gimp"
 
 echo -e "\033[0;32m====================================="
 echo -e "\033[1;32mThe Linux IT Guy - EndeavourOS Scripts"
