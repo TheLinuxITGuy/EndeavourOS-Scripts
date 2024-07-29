@@ -1,6 +1,5 @@
 # EndeavourOS-Scripts
 Add and Remove software from EndeavourOS with the click of a button
-
 ![](<Screenshot/Screenshot.png>)
 
 ## How do I use it?
