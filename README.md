@@ -2,7 +2,7 @@
 Add and Remove software from EndeavourOS with the click of a button
 ![](<Screenshot/Screenshot.png>)
 ## How do I use it?
-
+There are two options: Git and Release. Please choose one.
 ### Git method
 1. From a Terminal, clone this project and cd into it: 
     1. `git clone https://github.com/TheLinuxITGuy/EndeavourOS-Scripts.git && cd EndeavourOS-Scripts`
