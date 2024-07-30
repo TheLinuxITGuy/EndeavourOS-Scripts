@@ -37,6 +37,7 @@ class ourwindow(Gtk.Window):
                            ("Microsoft Visual Studio Code", "./install-code.sh"),
                            ("Microsoft Edge", "./install-edge.sh"),
                            ("Neofetch", "./install-neofetch.sh"),
+                           ("OBS Studio", "./install-obs.sh"),
                            ("Steam & ProtonUp-Qt", "./install-steamproton.sh")]
 
         for option, script in install_options:
@@ -69,6 +70,7 @@ class ourwindow(Gtk.Window):
                           ("Microsoft Visual Studio Code", "./remove-code.sh"),
                           ("Microsoft Edge", "./remove-edge.sh"),
                           ("Neofetch", "./remove-neofetch.sh"),
+                          ("OBS Studio", "./remove-obs.sh"),
                           ("Steam & ProtonUp-Qt", "./remove-steamproton.sh")]
 
         for option, script in remove_options:
