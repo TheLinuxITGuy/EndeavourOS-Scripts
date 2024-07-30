@@ -2,13 +2,11 @@
 Add and Remove software from EndeavourOS with the click of a button
 ![](<Screenshot/Screenshot.png>)
 ## How do I use it?
-- Download the latest .tar.gz release into your ~/Downloads folder
-- Open a Terminal
--   Type: sudo pacman -S python-gobject
--   Type: cd ~/Downloads
--   Type: tar -xzf EndeavourOS-Scripts-1.x.tar.gz
--   Type: cd EndeavourOS-Scripts-1.x
--   Type: chmod u+x ./\*.\*
--   Type: python Main.py
-- Select the Applications you would like to Install/Remove
-- Click Run
+
+### Git method
+1. From a Terminal, clone this project and cd into it: 
+    1. `git clone https://github.com/TheLinuxITGuy/EndeavourOS-Scripts.git && cd EndeavourOS-Scripts`
+    2. Type: `chmod u+x ./*.*`
+    3. Type: `./Main.py`
+4. Select the Application you would like to Install/Remove
+5. Click Run
